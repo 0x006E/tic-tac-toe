@@ -17,14 +17,13 @@ export default function Game() {
 
   const [socketUrl, setSocketUrl] = useState("ws://localhost:3000");
   const [user, setUser] = useState("");
-  const { sendMessage, lastJsonMessage, readyState, getWebSocket } =
+  const { sendMessage, lastJsonMessage, readyState } =
     useWebSocket<Message>(socketUrl);
   const startGame = useCallback(() => {
     if (readyState !== ReadyState.OPEN) {
+      setSocketUrl("ws://localhost:3000");
     }
-    sendMessage("Start"), setIsGameStarted(true);
-  }, []);
-  const [isGameStarted, setIsGameStarted] = useState(false);
+  }, [socketUrl]);
 
   const connectionStatus = {
     [ReadyState.CONNECTING]: "Connecting",

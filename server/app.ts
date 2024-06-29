@@ -23,7 +23,8 @@ var aWss = expressWsInstance.getWss();
 
 
 function broadcast(data: Record<string, any>) {
-  aWss.clients.forEach(function (client) {
+  aWss.clients.forEach(function (client, idx) {
+    console.log(idx)
     client.send(JSON.stringify(data));
   });
 }
@@ -41,13 +42,14 @@ app.ws('/', function (ws, req) {
   id++;
 
 
-  ws.on('message', function (msg) {
+  ws.on('message', function (message) {
+    const msg = message.toString();
+    if (currentPlayer == "") {
+      ws.send('{"error": "Game is not full"}');
+      return;
+    }
     let data = {};
     if (msg == 'Start') {
-      if (id < 1) {
-        ws.send('{"error": "Game is not full"}');
-        return;
-      }
       data = { user: userid, state: state, next: currentPlayer }
       broadcast(data);
       return;
