@@ -24,15 +24,16 @@ export default function Game() {
   }[readyState];
 
   const currentState = JSON.parse(lastMessage?.data || "{}");
-  console.log(currentState);
   return (
     <div className="game">
-      <button onClick={startGame}>Start Game</button>
+      {!currentState?.["state"] && (
+        <button onClick={startGame}>Start Game</button>
+      )}
       <div className="game-board">
         {currentState?.["state"] && (
           <Board
             isWinner={currentState["winner"]}
-            xIsNext={currentState["user"] === "X"}
+            xIsNext={currentState["next"] === "X"}
             squares={currentState["state"]}
             onPlay={(val) => {
               sendMessage(val.toString());
