@@ -11,10 +11,6 @@ type Message = {
 };
 
 export default function Game() {
-  // function handlePlay(nextSquares) {
-  //   setCurrentMove(nextHistory.length - 1);
-  // }
-
   const [socketUrl, setSocketUrl] = useState("ws://localhost:3000");
   const [user, setUser] = useState("");
   const { sendMessage, lastJsonMessage, readyState } =
@@ -23,6 +19,7 @@ export default function Game() {
     if (readyState !== ReadyState.OPEN) {
       setSocketUrl("ws://localhost:3000");
     }
+    sendMessage("Start");
   }, [socketUrl]);
 
   const connectionStatus = {
@@ -49,7 +46,6 @@ export default function Game() {
           {currentState?.["state"] && (
             <>
               <Board
-                user={user}
                 isWinner={currentState["winner"]}
                 xIsNext={currentState["next"] === "X"}
                 squares={currentState["state"]}
@@ -57,7 +53,9 @@ export default function Game() {
                   sendMessage(val.toString());
                 }}
               />
-              <button onClick={() => sendMessage("Reset")}>Reset</button>
+              {currentState?.["winner"] && (
+                <button onClick={() => sendMessage("Reset")}>Reset</button>
+              )}
             </>
           )}
         </div>

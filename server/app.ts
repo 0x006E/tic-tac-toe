@@ -23,8 +23,7 @@ var aWss = expressWsInstance.getWss();
 
 
 function broadcast(data: Record<string, any>) {
-  aWss.clients.forEach(function (client, idx) {
-    console.log(idx)
+  aWss.clients.forEach(function (client) {
     client.send(JSON.stringify(data));
   });
 }
